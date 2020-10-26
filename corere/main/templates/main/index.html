@@ -88,6 +88,7 @@
                             },
                         },
                     {% endif %}
+                    {% if selected_manuscript_id %}
                         {
                             extend: 'collection',
                             text: 'Manuscript Actions',
@@ -225,6 +226,7 @@
                             ]
                         },
                         {% endif %}
+                    {% endif %}
                         //the default for the searches controlled by these two buttons is set later down
                         {
                             text: '<i class="far fa-eye-slash"></i> Completed',
@@ -428,6 +430,7 @@
                     //dom: 'Bfrtip', //old setting which is broken, should understand better
                     data: response.data.slice(1),
                     buttons: [
+                    {% if selected_manuscript_id %}
                         {% if request.user|has_group:GROUP_ROLE_AUTHOR %} 
                             {
                                 text: '<i class="fas fa-plus"></i> &nbsp;Create Submission',
@@ -731,6 +734,7 @@
                                 {% endif %}
                             ]
                         },
+                    {% endif %}
                     ]
                 })
                 .on( 'select', function ( e, dt, type, indexes ) {
