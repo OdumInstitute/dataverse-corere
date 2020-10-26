@@ -73,7 +73,7 @@
                     {% endif %}
                     {% if selected_manuscript_id %}
                         {
-                            text: 'Clear Manuscript Selection',
+                            text: 'Deselect Manuscript',
                             name: 'deselectManuscript',
                             action: function ( e, dt, node, config ) {
                                 window.location.href = "clearselection";
@@ -262,7 +262,7 @@
                             },
                         },
                         {% endif %}
-                    ]
+                    ],
                 })
                 .on( 'select', function ( e, dt, type, indexes ) {
                     //We delay select until no events have fired for a bit so that we don't do a zillion queries
@@ -299,21 +299,46 @@
                         last_row = cell.index().row;
                     }
                 });
-                var selected_row = 0
-                if(table.cell( { focused: true } ) && table.cell( { focused: true } ).length) { 
-                    selected_row = table.cell( { focused: true } ).index().row
-                } else { //select cell if none selected, allows instant keyboard use
-                    table.cell({ row: selected_row, column: 0 }).focus();
-                }
-                table.row(selected_row).select(); //uses 'keys' retained row it was on to actually select the row
+                {% if selected_manuscript_id %}
+                    $('#manuscript_table').addClass("disabled");
+                    //$('#manuscript_table_paginate').addClass("disabled");
+                    //$('select[name="manuscript_table_length"]').prop('disabled', 'disabled');
+                    
+                {% else %}
+                    var selected_row = 0
+                    if(table.cell( { focused: true } ) && table.cell( { focused: true } ).length) { 
+                        selected_row = table.cell( { focused: true } ).index().row
+                    } else { //select cell if none selected, allows instant keyboard use
+                        table.cell({ row: selected_row, column: 0 }).focus();
+                    }
+                    table.row(selected_row).select(); //uses 'keys' retained row it was on to actually select the row 
+                {% endif %}
+                
+
+
                 table.buttons().container().prependTo("#manuscript_buttons");
 
                 table.columns( 5 ).search( "New|Awaiting Initial Submission|Awaiting Resubmission|Reviewing Submission|Processing Submission", true, false, false ).draw();
                 {% if request.user|has_group:GROUP_ROLE_CURATOR and not request.user.is_superuser %} 
-                table.columns( 10 ).search( "{{request.user.username}}" ).draw();
+                    table.columns( 10 ).search( "{{request.user.username}}" ).draw();
                 {% else %}
-                table.columns( 10 ).search( "" ).draw();
+                    table.columns( 10 ).search( "" ).draw();
                 {% endif %}
+
+                {% if selected_manuscript_id %}
+                    var row = table.row(function ( idx, data, node ) {
+                        console.log(data[0])
+                        return data[0] === "{{selected_manuscript_id}}";
+                    } );
+                    if (row.length > 0) {
+                        console.log(row)
+                        console.log("SELECT")
+                        row.select()
+                        .show()
+                        .draw(false);
+                    }
+                {% endif %}
+
                 function select_later() {
                     manuscript_id = table.rows( { selected: true } ).data()[0][0] //Implicit globals are not best practice
                     var avail_buttons = table.rows( { selected: true } ).data()[0][button_index];
