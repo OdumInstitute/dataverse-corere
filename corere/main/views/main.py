@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 def index(request):
     if request.user.is_authenticated:
         args = {'user':     request.user, 
+                'root_object_title':  request.user.current_manuscript.title if request.user.current_manuscript else None, 
+                'selected_manuscript_id':  request.user.current_manuscript.id if request.user.current_manuscript else None, 
                 'manuscript_columns':  helper_manuscript_columns(request.user),
                 'submission_columns':  helper_submission_columns(request.user),
                 'GROUP_ROLE_EDITOR': c.GROUP_ROLE_EDITOR,
@@ -85,3 +87,15 @@ def site_actions(request):
         return render(request, 'main/site_actions.html', {'page_header': "site_actions"})
     else:
         raise Http404()
+
+@login_required()
+def select_manuscript(request, id):
+    request.user.current_manuscript = get_object_or_404(m.Manuscript, id=id)
+    request.user.save()
+    return redirect("/")
+
+@login_required()
+def clear_selected_manuscript(request):
+    request.user.current_manuscript = None
+    request.user.save()
+    return redirect("/")

@@ -59,7 +59,8 @@ class User(AbstractUser):
     invite_key = models.CharField(max_length=64, blank=True) # MAD: Should this be encrypted?
     invited_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
     gitlab_id = models.IntegerField(blank=True, null=True)
-    history = HistoricalRecords(bases=[AbstractHistoryWithChanges,])
+    history = HistoricalRecords(bases=[AbstractHistoryWithChanges,], excluded_fields=['current_manuscript'])
+    current_manuscript = models.ForeignKey('Manuscript', null=True, on_delete=models.SET_NULL, related_name="manuscript_current_selecting_users")
 
     # Django Guardian has_perm does not check whether the user has a global perm.
     # We always want that in our project, so this function checks both

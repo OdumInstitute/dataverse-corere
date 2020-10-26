@@ -71,6 +71,23 @@
                             },
                         },
                     {% endif %}
+                    {% if selected_manuscript_id %}
+                        {
+                            text: 'Clear Manuscript Selection',
+                            name: 'deselectManuscript',
+                            action: function ( e, dt, node, config ) {
+                                window.location.href = "clearselection";
+                            },
+                        },
+                    {% else %}
+                        {
+                            text: 'Select Manuscript',
+                            name: 'selectManuscript',
+                            action: function ( e, dt, node, config ) {
+                                window.location.href = "manuscript/"+manuscript_id+"/select";
+                            },
+                        },
+                    {% endif %}
                         {
                             extend: 'collection',
                             text: 'Manuscript Actions',
