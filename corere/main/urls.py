@@ -58,4 +58,5 @@ urlpatterns = [
     path('switch_role/', main.switch_role, name="switch_role"),
 
     path('test_iframe/', main.test_iframe, name="test_iframe"),
+    path('proxy/<str:path>/', main.docker_proxy, name="docker_proxy"),
 ]

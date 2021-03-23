@@ -44,7 +44,8 @@ def start_repo2docker_container(manuscript):
     client = docker.from_env()
     container_info = manuscript.manuscript_containerinfo
     print(container_info.image_name)
-    run_string = "jupyter notebook --ip " + container_ip + " --NotebookApp.token='' --NotebookApp.password='' " #--NotebookApp.allow_origin='*'
+    run_string = "jupyter notebook --ip " + container_ip + " --NotebookApp.token='' --NotebookApp.password='' "
+    #For allowing the notebook to be shown in an iframe.
     #TODO: Set the "*" to be more specific
     run_string += "--NotebookApp.tornado_settings=\"{ 'headers': { 'Content-Security-Policy': \\\"frame-ancestors 'self' *\\\" } }\""
 

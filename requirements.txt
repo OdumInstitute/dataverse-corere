@@ -18,6 +18,8 @@ django-fsm==2.7.1
 django-guardian==2.3.0
 #Custom django-invitations (1.9.3) with minor change to pass the key forward to signup as we use it when creating an initial user
 git+git://github.com/OdumInstitute/django-invitations.git
+#Simple web proxy app. Forked from a fork that added a bugfix.
+git+git://github.com/OdumInstitute/django-proxy
 django-libsass==0.8
 django-notifications-hq==1.6.0
 django-oauth-toolkit==1.4.0

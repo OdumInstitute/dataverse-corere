@@ -16,6 +16,9 @@ from corere.main.binderhub import binder_build_load
 from guardian.shortcuts import assign_perm, remove_perm
 from corere.main.templatetags.auth_extras import has_group
 
+from django.views.decorators.csrf import csrf_exempt
+from proxy.views import proxy_view
+
 logger = logging.getLogger(__name__)
 
 def index(request):
@@ -131,3 +134,13 @@ def switch_role(request):
 def test_iframe(request):
     args = {}
     return render(request, "main/test_iframe.html", args)
+
+@login_required
+@csrf_exempt
+def docker_proxy(request, path):
+    print(path)
+    extra_requests_args = {}
+    #remoteurl = 'http://<host_name>/' + path
+    remoteurl = 'http://' + path
+    print(remoteurl)
+    return proxy_view(request, remoteurl, extra_requests_args)
